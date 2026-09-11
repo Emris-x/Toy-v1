@@ -557,3 +557,293 @@ h3 {
     }
 
 }
+/* =========================================================
+   TOY V1 — BRAND FOUNDATION
+   Phase 2.1
+   ========================================================= */
+
+
+/* =========================================================
+   TOY BRAND TOKENS
+   ---------------------------------------------------------
+   These variables define the visual language of the entire
+   application.
+   ========================================================= */
+
+:root {
+
+    /* -----------------------------------------------------
+       BRAND PALETTE
+       ----------------------------------------------------- */
+
+    --toy-cream: #F7F0E4;
+    --toy-cream-deep: #EDE1D0;
+
+    --toy-cocoa: #A98268;
+    --toy-cocoa-light: #C7A994;
+
+    --toy-espresso: #3A241B;
+    --toy-espresso-soft: #5A4034;
+
+    --toy-honey: #D69A3A;
+
+    --toy-white: #FFFFFF;
+
+
+    /* -----------------------------------------------------
+       SURFACE SYSTEM
+       ----------------------------------------------------- */
+
+    --toy-surface: rgba(255, 255, 255, 0.72);
+
+    --toy-surface-strong: rgba(255, 255, 255, 0.92);
+
+    --toy-surface-dark: rgba(58, 36, 27, 0.08);
+
+
+    /* -----------------------------------------------------
+       BORDER SYSTEM
+       ----------------------------------------------------- */
+
+    --toy-border: rgba(58, 36, 27, 0.10);
+
+    --toy-border-strong: rgba(58, 36, 27, 0.16);
+
+
+    /* -----------------------------------------------------
+       SHADOW SYSTEM
+       ----------------------------------------------------- */
+
+    --toy-shadow-small:
+        0 4px 12px rgba(58, 36, 27, 0.08);
+
+    --toy-shadow-soft:
+        0 8px 24px rgba(58, 36, 27, 0.10);
+
+    --toy-shadow-large:
+        0 16px 40px rgba(58, 36, 27, 0.14);
+
+
+    /* -----------------------------------------------------
+       RADIUS SYSTEM
+       ----------------------------------------------------- */
+
+    --toy-radius-xs: 10px;
+    --toy-radius-sm: 16px;
+    --toy-radius-md: 24px;
+    --toy-radius-lg: 32px;
+    --toy-radius-xl: 42px;
+    --toy-radius-pill: 999px;
+
+
+    /* -----------------------------------------------------
+       SPACING SYSTEM
+       ----------------------------------------------------- */
+
+    --toy-space-1: 4px;
+    --toy-space-2: 8px;
+    --toy-space-3: 12px;
+    --toy-space-4: 16px;
+    --toy-space-5: 20px;
+    --toy-space-6: 24px;
+    --toy-space-7: 32px;
+    --toy-space-8: 40px;
+    --toy-space-9: 48px;
+    --toy-space-10: 64px;
+
+
+    /* -----------------------------------------------------
+       MOTION SYSTEM
+       ----------------------------------------------------- */
+
+    --toy-motion-fast: 150ms ease;
+    --toy-motion-normal: 260ms ease;
+    --toy-motion-slow: 500ms ease;
+
+
+    /* -----------------------------------------------------
+       INTERACTION
+       ----------------------------------------------------- */
+
+    --toy-touch-size: 48px;
+}
+
+
+/* =========================================================
+   GLOBAL SELECTION
+   ========================================================= */
+
+::selection {
+    background: var(--toy-honey);
+    color: var(--toy-espresso);
+}
+
+
+/* =========================================================
+   GLOBAL IMAGE BEHAVIOR
+   ========================================================= */
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   GLOBAL LINK BEHAVIOR
+   ========================================================= */
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   BRAND UTILITY — SOFT SURFACE
+   ---------------------------------------------------------
+   Reusable container style for future UI.
+   ========================================================= */
+
+.toy-surface {
+    background: var(--toy-surface);
+
+    border: 1px solid var(--toy-border);
+
+    border-radius: var(--toy-radius-lg);
+
+    box-shadow: var(--toy-shadow-soft);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+
+/* =========================================================
+   BRAND UTILITY — PILL
+   ========================================================= */
+
+.toy-pill {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: var(--toy-touch-size);
+
+    padding:
+        var(--toy-space-3)
+        var(--toy-space-5);
+
+    border-radius: var(--toy-radius-pill);
+
+    background: var(--toy-cream);
+
+    color: var(--toy-espresso);
+
+    border: 1px solid var(--toy-border);
+
+    font-weight: 800;
+
+    transition:
+        transform var(--toy-motion-fast),
+        box-shadow var(--toy-motion-fast);
+}
+
+
+.toy-pill:hover {
+    transform: translateY(-2px);
+
+    box-shadow: var(--toy-shadow-small);
+}
+
+
+/* =========================================================
+   BRAND UTILITY — EYEBROW
+   ========================================================= */
+
+.toy-eyebrow {
+    display: inline-block;
+
+    color: var(--toy-cocoa);
+
+    font-size: 0.78rem;
+
+    font-weight: 900;
+
+    letter-spacing: 0.12em;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   BRAND UTILITY — DISPLAY TEXT
+   ========================================================= */
+
+.toy-display {
+    color: var(--toy-espresso);
+
+    font-weight: 900;
+
+    letter-spacing: -0.03em;
+
+    line-height: 1.05;
+}
+
+
+/* =========================================================
+   BRAND UTILITY — BODY TEXT
+   ========================================================= */
+
+.toy-body {
+    color: var(--toy-espresso-soft);
+
+    font-weight: 600;
+
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   BRAND UTILITY — GENTLE INTERACTION
+   ========================================================= */
+
+.toy-interactive {
+    transition:
+        transform var(--toy-motion-normal),
+        box-shadow var(--toy-motion-normal);
+}
+
+
+.toy-interactive:hover {
+    transform: translateY(-3px);
+}
+
+
+.toy-interactive:active {
+    transform: scale(0.97);
+}
+
+
+/* =========================================================
+   BRAND UTILITY — DISABLE SELECTION ON GAME ELEMENTS
+   ---------------------------------------------------------
+   Useful later for alphabet cards and game objects.
+   ========================================================= */
+
+.toy-game-object {
+    user-select: none;
+    -webkit-user-select: none;
+
+    -webkit-touch-callout: none;
+}
+
+
+/* =========================================================
+   BRAND UTILITY — HIDDEN
+   ========================================================= */
+
+[hidden] {
+    display: none !important;
+}
