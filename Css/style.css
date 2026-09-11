@@ -354,3 +354,206 @@ button:focus-visible {
         animation-iteration-count: 1 !important;
     }
 }
+
+/* =========================================================
+   TOY V1 — RESPONSIVE FOUNDATION
+   Phase 1.5
+   ========================================================= */
+
+
+/* =========================================================
+   1. SAFE AREA SUPPORT
+   ---------------------------------------------------------
+   Helps TOY behave properly on modern phones with
+   rounded screens / camera cutouts.
+   ========================================================= */
+
+body {
+    padding:
+        env(safe-area-inset-top)
+        env(safe-area-inset-right)
+        env(safe-area-inset-bottom)
+        env(safe-area-inset-left);
+}
+
+
+/* =========================================================
+   2. PREVENT HORIZONTAL SCROLLING
+   ========================================================= */
+
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   3. TOUCH BEHAVIOR
+   ---------------------------------------------------------
+   TOY is designed primarily for touch interaction.
+   ========================================================= */
+
+button {
+    touch-action: manipulation;
+}
+
+
+/* =========================================================
+   4. MINIMUM INTERACTIVE SIZE
+   ---------------------------------------------------------
+   Interactive elements should be large enough for
+   comfortable tapping.
+   ========================================================= */
+
+button,
+[role="button"] {
+    min-height: 48px;
+}
+
+
+/* =========================================================
+   5. RESPONSIVE TYPOGRAPHY
+   ---------------------------------------------------------
+   clamp() allows text to scale naturally between phones
+   and larger screens.
+   ========================================================= */
+
+h1 {
+    font-size: clamp(2rem, 8vw, 4rem);
+}
+
+
+h2 {
+    font-size: clamp(1.6rem, 6vw, 3rem);
+}
+
+
+h3 {
+    font-size: clamp(1.3rem, 5vw, 2rem);
+}
+
+
+/* =========================================================
+   6. VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .screen {
+        padding: 14px;
+    }
+
+
+    .boot-content h1 {
+        font-size: 30px;
+    }
+
+
+    .boot-content p {
+        font-size: 15px;
+    }
+
+
+    #start-button {
+        min-height: 54px;
+        font-size: 17px;
+    }
+
+}
+
+
+/* =========================================================
+   7. TABLETS
+   ========================================================= */
+
+@media (min-width: 601px) {
+
+    .screen {
+        padding: 32px;
+    }
+
+
+    .boot-content {
+        max-width: 600px;
+    }
+
+}
+
+
+/* =========================================================
+   8. LARGE SCREENS
+   ========================================================= */
+
+@media (min-width: 1024px) {
+
+    .screen {
+        padding: 48px;
+    }
+
+
+    .boot-content {
+        max-width: 680px;
+    }
+
+}
+
+
+/* =========================================================
+   9. LANDSCAPE PHONES
+   ---------------------------------------------------------
+   Prevents the interface from becoming vertically cramped.
+   ========================================================= */
+
+@media (max-height: 500px) and (orientation: landscape) {
+
+    .screen {
+        min-height: 100svh;
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+
+
+    .boot-content {
+        gap: 10px;
+    }
+
+
+    .logo-placeholder {
+        width: 64px;
+        height: 64px;
+        border-radius: 20px;
+        font-size: 20px;
+    }
+
+
+    .boot-content h1 {
+        font-size: 28px;
+    }
+
+
+    .boot-content p {
+        font-size: 14px;
+    }
+
+
+    #start-button {
+        min-height: 48px;
+    }
+
+}
+
+
+/* =========================================================
+   10. FULL-SCREEN MOBILE APP FEEL
+   ========================================================= */
+
+@supports (height: 100dvh) {
+
+    #app,
+    #screen,
+    .screen {
+        min-height: 100dvh;
+    }
+
+}
