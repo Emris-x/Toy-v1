@@ -1,389 +1,643 @@
 /* =========================================================
-   TOY V1 — APPLICATION ARCHITECTURE
-   Phase 1.4
+   TOY — MASTER SCREEN APP
+   Version 1.1.0
    ========================================================= */
 
+const TOY_STATE_KEY = "toy-v1-state";
 
-/* =========================================================
-   1. TOY APPLICATION STATE
-   ---------------------------------------------------------
-   This object represents what TOY currently knows about
-   the child and the current session.
+const state = {
+  app: {
+    name: "TOY",
+    version: "1.1.0",
+    initialized: false
+  },
 
-   We will expand this later as the learning system grows.
-   ========================================================= */
+  screen: {
+    current: "home"
+  },
 
-const TOY = {
+  progress: {
+    level: 1,
+    stars: 0,
+    totalQuestions: 0,
+    correctAnswers: 0,
+    incorrectAnswers: 0
+  },
 
-    /* ---------- Application ---------- */
+  game: {
+    active: false,
+    currentQuestion: null,
+    currentPattern: null,
+    difficulty: "easy",
+    streak: 0
+  },
 
-    app: {
-        name: "TOY",
-        version: "1.0.0",
-        initialized: false
-    },
-
-
-    /* ---------- Current Screen ---------- */
-
-    screen: {
-        current: "boot"
-    },
-
-
-    /* ---------- Child Progress ---------- */
-
-    progress: {
-        level: 1,
-        stars: 0,
-        totalQuestions: 0,
-        correctAnswers: 0,
-        incorrectAnswers: 0
-    },
-
-
-    /* ---------- Game State ---------- */
-
-    game: {
-        active: false,
-        currentQuestion: null,
-        currentPattern: null,
-        difficulty: 1,
-        streak: 0
-    },
-
-
-    /* ---------- Audio ---------- */
-
-    audio: {
-        soundEnabled: true,
-        voiceEnabled: true
-    }
-
+  audio: {
+    soundEnabled: true,
+    voiceEnabled: true
+  }
 };
 
 
 /* =========================================================
-   2. SCREEN REGISTRY
-   ---------------------------------------------------------
-   Every major TOY screen will eventually be registered here.
-
-   For V1 we start with the boot screen.
-
-   Later:
-
-   boot
-   home
-   abcLand
-   game
-   results
-   settings
+   DOM
    ========================================================= */
 
-const SCREENS = {
-
-    boot: "boot-screen",
-
-    home: "home-screen",
-
-    abcLand: "abc-land-screen",
-
-    game: "game-screen",
-
-    results: "results-screen",
-
-    settings: "settings-screen"
-
-};
+const DOM = {};
 
 
 /* =========================================================
-   3. DOM CACHE
-   ---------------------------------------------------------
-   We store important HTML elements here so JavaScript
-   doesn't repeatedly search the entire document.
-   ========================================================= */
-
-const DOM = {
-
-    app: null,
-
-    screen: null,
-
-    bootScreen: null,
-
-    startButton: null
-
-};
-
-
-/* =========================================================
-   4. DOM INITIALIZATION
+   INITIALIZE DOM
    ========================================================= */
 
 function initializeDOM() {
+  DOM.screen = document.getElementById("screen");
 
-    DOM.app = document.getElementById("app");
+  DOM.startButton =
+    document.getElementById("start-button");
 
-    DOM.screen = document.getElementById("screen");
+  DOM.soundButton =
+    document.getElementById("sound-button");
 
-    DOM.bootScreen = document.getElementById(
-        SCREENS.boot
-    );
+  DOM.soundIcon =
+    document.getElementById("sound-icon");
 
-    DOM.startButton = document.getElementById(
-        "start-button"
-    );
+  DOM.settingsButton =
+    document.getElementById("settings-button");
 
+  DOM.milo =
+    document.getElementById("milo");
+
+  DOM.miloBubble =
+    document.getElementById("milo-bubble");
+
+  DOM.toast =
+    document.getElementById("toast");
+
+  DOM.starCount =
+    document.getElementById("star-count");
+
+  DOM.progressMeter =
+    document.getElementById("progress-meter");
+
+  DOM.progressCard =
+    document.getElementById("progress-card");
+
+  DOM.activityCards =
+    document.querySelectorAll(".activity-card");
+
+  DOM.bootScreen =
+    document.getElementById("boot-screen");
 }
 
 
 /* =========================================================
-   5. SCREEN MANAGEMENT
-   ---------------------------------------------------------
-   This will eventually allow TOY to move between:
-
-   Home
-      ↓
-   ABC Land
-      ↓
-   Game
-      ↓
-   Results
+   LOCAL STORAGE
    ========================================================= */
-
-function showScreen(screenName) {
-
-    const screenId = SCREENS[screenName];
-
-    if (!screenId) {
-
-        console.warn(
-            `TOY: Screen "${screenName}" does not exist.`
-        );
-
-        return;
-    }
-
-
-    const screens = document.querySelectorAll(".screen");
-
-
-    screens.forEach((screen) => {
-
-        screen.hidden = true;
-
-    });
-
-
-    const targetScreen = document.getElementById(screenId);
-
-
-    if (!targetScreen) {
-
-        console.warn(
-            `TOY: Screen element "${screenId}" was not found.`
-        );
-
-        return;
-    }
-
-
-    targetScreen.hidden = false;
-
-    TOY.screen.current = screenName;
-
-}
-
-
-/* =========================================================
-   6. LOCAL STORAGE
-   ---------------------------------------------------------
-   V1 does not need accounts or a database.
-
-   We will use the child's device/browser for basic progress.
-
-   Later we can replace this with a proper persistence
-   system without rewriting the entire application.
-   ========================================================= */
-
-const STORAGE_KEY = "toy-v1-state";
-
 
 function saveState() {
-
-    try {
-
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(TOY)
-        );
-
-    } catch (error) {
-
-        console.warn(
-            "TOY: Unable to save local progress.",
-            error
-        );
-
-    }
-
+  try {
+    localStorage.setItem(
+      TOY_STATE_KEY,
+      JSON.stringify(state)
+    );
+  } catch (error) {
+    console.warn(
+      "TOY could not save state.",
+      error
+    );
+  }
 }
 
 
 function loadState() {
+  try {
+    const saved =
+      localStorage.getItem(TOY_STATE_KEY);
 
-    try {
-
-        const savedState =
-            localStorage.getItem(STORAGE_KEY);
-
-
-        if (!savedState) {
-            return;
-        }
-
-
-        const parsedState =
-            JSON.parse(savedState);
-
-
-        if (parsedState.progress) {
-
-            TOY.progress = {
-                ...TOY.progress,
-                ...parsedState.progress
-            };
-
-        }
-
-
-        if (parsedState.audio) {
-
-            TOY.audio = {
-                ...TOY.audio,
-                ...parsedState.audio
-            };
-
-        }
-
-
-    } catch (error) {
-
-        console.warn(
-            "TOY: Unable to load saved progress.",
-            error
-        );
-
+    if (!saved) {
+      return;
     }
 
+    const parsed =
+      JSON.parse(saved);
+
+    if (parsed.progress) {
+      state.progress = {
+        ...state.progress,
+        ...parsed.progress
+      };
+    }
+
+    if (parsed.audio) {
+      state.audio = {
+        ...state.audio,
+        ...parsed.audio
+      };
+    }
+
+  } catch (error) {
+    console.warn(
+      "TOY could not load saved state.",
+      error
+    );
+  }
 }
 
 
 /* =========================================================
-   7. GAME RESET
-   ---------------------------------------------------------
-   Used when starting a fresh learning session.
+   SCREEN
    ========================================================= */
 
-function resetGameSession() {
+function showScreen(screenName) {
+  state.screen.current = screenName;
 
-    TOY.game = {
-
-        active: false,
-
-        currentQuestion: null,
-
-        currentPattern: null,
-
-        difficulty: 1,
-
-        streak: 0
-
-    };
-
+  saveState();
 }
 
 
 /* =========================================================
-   8. START TOY
-   ---------------------------------------------------------
-   This is the main entry point.
-
-   Eventually this function will initialize:
-
-   - Milo
-   - audio
-   - progress
-   - learning engine
-   - game engine
-   - navigation
+   PROGRESS
    ========================================================= */
 
-function initializeTOY() {
+function updateProgressUI() {
 
-    initializeDOM();
+  if (DOM.starCount) {
+    const stars = state.progress.stars;
 
-    loadState();
-
-    resetGameSession();
-
-    setupEventListeners();
-
-
-    TOY.app.initialized = true;
+    DOM.starCount.textContent =
+      `${stars} ${stars === 1 ? "star" : "stars"}`;
+  }
 
 
-    console.log(
-        `TOY ${TOY.app.version} initialized.`
+  if (DOM.progressMeter) {
+
+    const stars =
+      state.progress.stars;
+
+    const percentage =
+      Math.min(
+        100,
+        (stars % 10) * 10
+      );
+
+    DOM.progressMeter.style.width =
+      `${percentage}%`;
+  }
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+let toastTimer = null;
+
+function showToast(message) {
+
+  if (!DOM.toast) {
+    return;
+  }
+
+  DOM.toast.textContent = message;
+
+  DOM.toast.classList.add("visible");
+
+  clearTimeout(toastTimer);
+
+  toastTimer =
+    setTimeout(() => {
+      DOM.toast.classList.remove("visible");
+    }, 2200);
+}
+
+
+/* =========================================================
+   MILO
+   ========================================================= */
+
+let miloTimer = null;
+
+function miloSpeak(message, duration = 2600) {
+
+  if (!DOM.miloBubble) {
+    return;
+  }
+
+  DOM.miloBubble.textContent =
+    message;
+
+  DOM.miloBubble.classList.add(
+    "visible"
+  );
+
+  clearTimeout(miloTimer);
+
+  miloTimer =
+    setTimeout(() => {
+      DOM.miloBubble.classList.remove(
+        "visible"
+      );
+    }, duration);
+}
+
+
+function miloReact(type = "happy") {
+
+  if (!DOM.milo) {
+    return;
+  }
+
+  DOM.milo.classList.remove(
+    "milo-happy",
+    "milo-curious",
+    "milo-surprised"
+  );
+
+  /*
+    Force browser to recognize the
+    animation restarting.
+  */
+  void DOM.milo.offsetWidth;
+
+  DOM.milo.classList.add(
+    `milo-${type}`
+  );
+
+  setTimeout(() => {
+
+    DOM.milo.classList.remove(
+      `milo-${type}`
     );
 
+  }, 800);
 }
 
 
 /* =========================================================
-   9. EVENT LISTENERS
-   ========================================================= */
-
-function setupEventListeners() {
-
-    if (DOM.startButton) {
-
-        DOM.startButton.addEventListener(
-            "click",
-            handleStart
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   10. START BUTTON
-   ---------------------------------------------------------
-   Temporary behavior.
-
-   We are NOT building the Home screen yet.
-
-   This simply proves that our JavaScript architecture is
-   connected correctly.
+   START EXPERIENCE
    ========================================================= */
 
 function handleStart() {
 
-    console.log("TOY: Start button activated.");
+  state.progress.stars += 1;
 
-    saveState();
+  state.game.active = true;
 
+  showScreen("home");
+
+  updateProgressUI();
+
+  saveState();
+
+  miloReact("happy");
+
+  miloSpeak(
+    "Nice! Let's begin. ✨"
+  );
+
+  showToast(
+    "You found your first star!"
+  );
 }
 
 
 /* =========================================================
-   11. APPLICATION START
+   SOUND
+   ========================================================= */
+
+function updateSoundUI() {
+
+  if (!DOM.soundIcon) {
+    return;
+  }
+
+  DOM.soundIcon.textContent =
+    state.audio.soundEnabled
+      ? "🔊"
+      : "🔇";
+}
+
+
+function toggleSound() {
+
+  state.audio.soundEnabled =
+    !state.audio.soundEnabled;
+
+  updateSoundUI();
+
+  saveState();
+
+  if (state.audio.soundEnabled) {
+
+    miloReact("happy");
+
+    miloSpeak(
+      "Sound is back! 🔊"
+    );
+
+  } else {
+
+    miloSpeak(
+      "Okay, I'll be quiet. 🤫"
+    );
+  }
+}
+
+
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+
+function handleSettings() {
+
+  miloReact("curious");
+
+  miloSpeak(
+    "Settings are coming soon! ⚙️"
+  );
+
+  showToast(
+    "TOY settings are still growing."
+  );
+}
+
+
+/* =========================================================
+   ACTIVITY CARDS
+   ========================================================= */
+
+function handleActivity(action) {
+
+  switch (action) {
+
+    case "learn":
+
+      miloReact("happy");
+
+      miloSpeak(
+        "Let's learn something new! 📚"
+      );
+
+      showToast(
+        "Learning world coming next."
+      );
+
+      break;
+
+
+    case "explore":
+
+      miloReact("curious");
+
+      miloSpeak(
+        "Ooooh... what should we discover? 🔎"
+      );
+
+      showToast(
+        "Let's follow your curiosity."
+      );
+
+      break;
+
+
+    case "create":
+
+      miloReact("happy");
+
+      miloSpeak(
+        "Let's make something! ✨"
+      );
+
+      showToast(
+        "Creative world coming next."
+      );
+
+      break;
+
+
+    default:
+
+      miloReact("curious");
+
+      miloSpeak(
+        "Hmm... I wonder."
+      );
+  }
+}
+
+
+/* =========================================================
+   MILO INTERACTION
+   ========================================================= */
+
+function handleMiloInteraction() {
+
+  const reactions = [
+    {
+      type: "happy",
+      message: "Hehe! You found me. 👋"
+    },
+
+    {
+      type: "curious",
+      message: "Where are we going?"
+    },
+
+    {
+      type: "surprised",
+      message: "Whoa! 😮"
+    },
+
+    {
+      type: "happy",
+      message: "Let's explore!"
+    }
+  ];
+
+  const reaction =
+    reactions[
+      Math.floor(
+        Math.random() * reactions.length
+      )
+    ];
+
+  miloReact(
+    reaction.type
+  );
+
+  miloSpeak(
+    reaction.message
+  );
+}
+
+
+/* =========================================================
+   PROGRESS INTERACTION
+   ========================================================= */
+
+function handleProgress() {
+
+  miloReact("happy");
+
+  miloSpeak(
+    `You've collected ${state.progress.stars} ${
+      state.progress.stars === 1
+        ? "star"
+        : "stars"
+    }! ⭐`
+  );
+
+  showToast(
+    "Every little discovery counts."
+  );
+}
+
+
+/* =========================================================
+   EVENT LISTENERS
+   ========================================================= */
+
+function setupEventListeners() {
+
+  if (DOM.startButton) {
+
+    DOM.startButton.addEventListener(
+      "click",
+      handleStart
+    );
+  }
+
+
+  if (DOM.soundButton) {
+
+    DOM.soundButton.addEventListener(
+      "click",
+      toggleSound
+    );
+  }
+
+
+  if (DOM.settingsButton) {
+
+    DOM.settingsButton.addEventListener(
+      "click",
+      handleSettings
+    );
+  }
+
+
+  if (DOM.milo) {
+
+    DOM.milo.addEventListener(
+      "click",
+      handleMiloInteraction
+    );
+
+    DOM.milo.addEventListener(
+      "keydown",
+      (event) => {
+
+        if (
+          event.key === "Enter" ||
+          event.key === " "
+        ) {
+
+          event.preventDefault();
+
+          handleMiloInteraction();
+        }
+      }
+    );
+  }
+
+
+  DOM.activityCards.forEach(
+    (card) => {
+
+      card.addEventListener(
+        "click",
+        () => {
+
+          const action =
+            card.dataset.action;
+
+          handleActivity(action);
+        }
+      );
+    }
+  );
+
+
+  if (DOM.progressCard) {
+
+    DOM.progressCard.addEventListener(
+      "click",
+      handleProgress
+    );
+  }
+}
+
+
+/* =========================================================
+   INITIAL MILO GREETING
+   ========================================================= */
+
+function initialMiloGreeting() {
+
+  setTimeout(() => {
+
+    miloSpeak(
+      "Hi! I'm Milo 👋"
+    );
+
+  }, 900);
+}
+
+
+/* =========================================================
+   INITIALIZE TOY
+   ========================================================= */
+
+function initializeTOY() {
+
+  initializeDOM();
+
+  loadState();
+
+  updateProgressUI();
+
+  updateSoundUI();
+
+  setupEventListeners();
+
+  state.app.initialized = true;
+
+  saveState();
+
+  /*
+    Give the browser a moment to
+    render before Milo appears.
+  */
+  setTimeout(() => {
+
+    if (DOM.bootScreen) {
+      DOM.bootScreen.classList.add(
+        "boot-hidden"
+      );
+    }
+
+    initialMiloGreeting();
+
+  }, 350);
+}
+
+
+/* =========================================================
+   START
    ========================================================= */
 
 document.addEventListener(
-    "DOMContentLoaded",
-    initializeTOY
+  "DOMContentLoaded",
+  initializeTOY
 );
