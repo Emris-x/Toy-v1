@@ -2,80 +2,320 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
 
-    <meta
-        name="description"
-        content="TOY — a playful learning world powered by curiosity."
-    >
+  <meta
+    name="description"
+    content="TOY — a little world for big discoveries."
+  >
 
-    <title>TOY</title>
+  <title>TOY</title>
 
-    <!-- Main stylesheet -->
-    <link rel="stylesheet" href="Css/style.css">
+  <link rel="stylesheet" href="Css/style.css">
+  <link rel="stylesheet" href="Css/toy-world.css">
 </head>
 
 <body>
+  <div id="app">
 
-    <!--
-        TOY APPLICATION
-        =================
-        Main application container.
-    -->
+    <main id="screen">
 
-    <div id="app">
+      <!-- =========================================
+           SOFT WORLD
+      ========================================== -->
 
-        <!--
-            SCREEN CONTAINER
-            ----------------
-            Every major TOY screen will eventually
-            live inside this container.
-        -->
+      <div class="toy-world" aria-hidden="true">
+        <div class="world-back">
+          <span class="world-orb orb-one"></span>
+          <span class="world-orb orb-two"></span>
+          <span class="world-cloud cloud-one"></span>
+        </div>
 
-        <main id="screen">
+        <div class="world-mid">
+          <span class="world-piece piece-one"></span>
+          <span class="world-piece piece-two"></span>
+          <span class="world-cloud cloud-two"></span>
+        </div>
 
-            <!-- Temporary foundation screen -->
-            <section id="boot-screen" class="screen">
+        <div class="world-front">
+          <span class="world-piece piece-three"></span>
+          <span class="world-orb orb-three"></span>
+        </div>
+      </div>
 
-                <div class="boot-content">
 
-                    <div class="toy-logo-wrapper">
-    <img
-        src="assets/toy-logo.png"
-        alt="TOY"
-        class="toy-logo"
-    >
-</div>
+      <!-- =========================================
+           TOP BAR
+      ========================================== -->
 
-                    <h1>Welcome to TOY</h1>
+      <header class="toy-topbar">
 
-                    <p>
-                        A little world for big discoveries.
-                    </p>
+        <button
+          id="sound-button"
+          class="toy-icon-button"
+          type="button"
+          aria-label="Toggle sound"
+        >
+          <span id="sound-icon">🔊</span>
+        </button>
 
-                    <button
-                        id="start-button"
-                        type="button"
-                    >
-                        Start
-                    </button>
+        <img
+          src="assets/toy-logo.png"
+          alt="TOY"
+          class="toy-logo"
+        >
 
+        <button
+          id="settings-button"
+          class="toy-icon-button"
+          type="button"
+          aria-label="Open settings"
+        >
+          ⚙
+        </button>
+
+      </header>
+
+
+      <!-- =========================================
+           MAIN CONTENT
+      ========================================== -->
+
+      <section class="toy-home">
+
+        <!-- Welcome -->
+
+        <div class="welcome-content">
+
+          <p class="toy-eyebrow">
+            A little world for big discoveries
+          </p>
+
+          <h1>
+            Hey there,<br>
+            ready to play?
+          </h1>
+
+          <p class="welcome-copy">
+            Come explore, learn, create, and discover something new with Milo.
+          </p>
+
+          <button
+            id="start-button"
+            class="toy-primary-button"
+            type="button"
+          >
+            <span>Let's explore</span>
+            <span class="button-arrow">→</span>
+          </button>
+
+        </div>
+
+
+        <!-- =========================================
+             MILO
+        ========================================== -->
+
+        <div class="milo-stage">
+
+          <div
+            id="milo"
+            class="milo"
+            role="button"
+            tabindex="0"
+            aria-label="Milo"
+          >
+
+            <div class="milo-glow"></div>
+
+            <div class="milo-body">
+
+              <div class="milo-ear milo-ear-left"></div>
+              <div class="milo-ear milo-ear-right"></div>
+
+              <div class="milo-face">
+
+                <div class="milo-eye milo-eye-left">
+                  <span></span>
                 </div>
 
-            </section>
+                <div class="milo-eye milo-eye-right">
+                  <span></span>
+                </div>
 
-        </main>
+                <div class="milo-nose"></div>
 
-    </div>
+                <div class="milo-mouth"></div>
+
+              </div>
+
+              <div class="milo-belly"></div>
+
+              <div class="milo-foot milo-foot-left"></div>
+              <div class="milo-foot milo-foot-right"></div>
+
+            </div>
+
+            <div class="milo-shadow"></div>
+
+          </div>
+
+          <div
+            id="milo-bubble"
+            class="milo-bubble"
+            aria-live="polite"
+          >
+            Hi! I'm Milo 👋
+          </div>
+
+        </div>
 
 
-    <!-- Main JavaScript -->
-    <script src="js/app.js"></script>
+        <!-- =========================================
+             ACTIVITIES
+        ========================================== -->
+
+        <div class="activity-section">
+
+          <div class="section-heading">
+            <p>What shall we do?</p>
+          </div>
+
+          <div class="activity-grid">
+
+            <button
+              class="activity-card activity-learn"
+              data-action="learn"
+              type="button"
+            >
+              <span class="activity-icon">📚</span>
+
+              <span class="activity-text">
+                <strong>Learn</strong>
+                <small>Discover something new</small>
+              </span>
+
+              <span class="activity-arrow">→</span>
+            </button>
+
+
+            <button
+              class="activity-card activity-explore"
+              data-action="explore"
+              type="button"
+            >
+              <span class="activity-icon">🔎</span>
+
+              <span class="activity-text">
+                <strong>Explore</strong>
+                <small>Follow your curiosity</small>
+              </span>
+
+              <span class="activity-arrow">→</span>
+            </button>
+
+
+            <button
+              class="activity-card activity-create"
+              data-action="create"
+              type="button"
+            >
+              <span class="activity-icon">✨</span>
+
+              <span class="activity-text">
+                <strong>Create</strong>
+                <small>Make something yours</small>
+              </span>
+
+              <span class="activity-arrow">→</span>
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================================
+             PROGRESS
+        ========================================== -->
+
+        <button
+          id="progress-card"
+          class="progress-card"
+          type="button"
+        >
+
+          <div class="progress-star">
+            ⭐
+          </div>
+
+          <div class="progress-info">
+
+            <div class="progress-heading">
+              <strong id="star-count">0 stars</strong>
+              <span>Keep discovering!</span>
+            </div>
+
+            <div class="progress-track">
+              <div
+                id="progress-meter"
+                class="progress-meter"
+                style="width: 0%"
+              ></div>
+            </div>
+
+          </div>
+
+          <span class="progress-arrow">
+            →
+          </span>
+
+        </button>
+
+      </section>
+
+
+      <!-- =========================================
+           TOAST
+      ========================================== -->
+
+      <div
+        id="toast"
+        class="toy-toast"
+        aria-live="polite"
+      ></div>
+
+
+      <!-- =========================================
+           BOOT SCREEN
+      ========================================== -->
+
+      <section
+        id="boot-screen"
+        class="boot-screen"
+        aria-hidden="true"
+      >
+
+        <img
+          src="assets/toy-logo.png"
+          alt="TOY"
+          class="toy-logo"
+        >
+
+        <p>A little world for big discoveries.</p>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <script src="js/app.js"></script>
 
 </body>
 </html>
